@@ -395,7 +395,7 @@ public class Junit4osgiPlugin extends AbstractMojo {
      * @param bundle
      * @return True if the provided bundle is a fragment
      */
-    private static boolean isFragment(Bundle bundle) {
+    public static boolean isFragment(Bundle bundle) {
         BundleRevision br = (BundleRevision)bundle.adapt(BundleRevision.class);
         return (br.getTypes() & BundleRevision.TYPE_FRAGMENT) != 0;
     }

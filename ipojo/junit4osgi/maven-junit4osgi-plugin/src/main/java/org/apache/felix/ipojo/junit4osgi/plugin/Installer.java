@@ -118,7 +118,9 @@ public class Installer implements BundleActivator {
         for (int i = 0; i < m_bundles.size(); i++) {
             URL url = (URL) m_bundles.get(i);
             Bundle bundle = context.installBundle(url.toString());
-            bundle.start();
+            if(!Junit4osgiPlugin.isFragment(bundle)) {
+                bundle.start();
+            }
         }
     }
     
@@ -160,8 +162,7 @@ public class Installer implements BundleActivator {
                     JarFile jar = new JarFile(file);
                     if (jar.getManifest().getMainAttributes().getValue("Bundle-ManifestVersion") != null) {
                         Bundle bundle = context.installBundle(file.toURL().toString());
-                        BundleRevision br = (BundleRevision)bundle.adapt(BundleRevision.class);
-                        if ((br.getTypes() & BundleRevision.TYPE_FRAGMENT) == 0) {
+                        if (!Junit4osgiPlugin.isFragment(bundle)) {
                             bundle.start();
                         }
                     } else {
