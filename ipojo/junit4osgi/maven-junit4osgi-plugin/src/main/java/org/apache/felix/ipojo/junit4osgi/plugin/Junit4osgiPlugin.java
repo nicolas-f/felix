@@ -53,6 +53,7 @@ import org.osgi.framework.BundleException;
 import org.osgi.framework.Constants;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
+import org.osgi.framework.wiring.BundleRevision;
 
 /**
  * Goal starting Felix and executing junit4osgi tests.
@@ -385,11 +386,19 @@ public class Junit4osgiPlugin extends AbstractMojo {
         boolean stability = true;
         Bundle[] bundles = bc.getBundles();
         for (int i = 0; i < bundles.length; i++) {
-            stability = stability && (bundles[i].getState() == Bundle.ACTIVE);
+            stability = stability && ((bundles[i].getState() == Bundle.ACTIVE) || (bundles[i].getState() == Bundle.RESOLVED && isFragment(bundles[i])));
         }
         return stability;
     }
 
+    /**
+     * @param bundle
+     * @return True if the provided bundle is a fragment
+     */
+    private static boolean isFragment(Bundle bundle) {
+        BundleRevision br = (BundleRevision)bundle.adapt(BundleRevision.class);
+        return (br.getTypes() & BundleRevision.TYPE_FRAGMENT) != 0;
+    }
     /**
      * Computes the URL list of bundles to install from
      * the <code>bundles</code> parameter.

@@ -30,6 +30,7 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
+import org.osgi.framework.wiring.BundleRevision;
 
 /**
  * Bundle Activator installing bundles in the embedded OSGi.
@@ -159,7 +160,10 @@ public class Installer implements BundleActivator {
                     JarFile jar = new JarFile(file);
                     if (jar.getManifest().getMainAttributes().getValue("Bundle-ManifestVersion") != null) {
                         Bundle bundle = context.installBundle(file.toURL().toString());
-                        bundle.start();
+                        BundleRevision br = (BundleRevision)bundle.adapt(BundleRevision.class);
+                        if ((br.getTypes() & BundleRevision.TYPE_FRAGMENT) == 0) {
+                            bundle.start();
+                        }
                     } else {
                         System.err.println("The current artifact " + file.getName() + " is not a valid bundle");
                     }
