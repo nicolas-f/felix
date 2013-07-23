@@ -639,7 +639,7 @@ public class Junit4osgiPlugin extends AbstractMojo {
         getLog().info("Bundles:");
         Bundle[] bundles = bc.getBundles();
         for (int i = 0; i < bundles.length; i++) {
-            getLog().info(bundles[i].getSymbolicName() + " - " + bundles[i].getState());
+            getLog().info(String.format("%02d ",new Object[]{Long.valueOf(bundles[i].getBundleId())}) + bundles[i].getSymbolicName() + " - " + bundles[i].getState());
         }
     }
 
